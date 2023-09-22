@@ -25,8 +25,8 @@ curl -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
 bash script.sh
 ```
 
-**相關目錄**\n
-install_path\n
+**相關目錄
+install_path
 installed: /etc/systemd/system/xray.service
 installed: /etc/systemd/system/xray@.service
 installed: /usr/local/bin/xray
@@ -37,10 +37,10 @@ installed: /var/log/xray/access.log
 installed: /var/log/xray/error.log
 
 vmess鏈接: link_path:/usr/link.vms
-acme證書: cert_path:/root/cert
+acme證書: cert_path:/root/cert**
 
-**相關指令**
-xy_command: 
+**相關指令
+xy_command: **
 ```
 xray run -c /usr/local/etc/xray/*.json
 systemctl start xray.service
