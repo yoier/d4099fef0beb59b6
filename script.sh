@@ -364,11 +364,13 @@ main() {
             echo "err num"
             exit
             ;;
+        esac
         ;;
     *)
         LOGE "err num"
+        exit
         ;;
     esac
-    exit
+    main
 }
 main
