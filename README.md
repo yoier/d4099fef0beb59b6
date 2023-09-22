@@ -34,13 +34,13 @@ installed: /usr/local/etc/xray/*.json
 installed: /usr/local/share/xray/geoip.dat
 installed: /usr/local/share/xray/geosite.dat
 installed: /var/log/xray/access.log
-installed: /var/log/xray/error.log
+installed: /var/log/xray/error.log**
 
-vmess鏈接: link_path:/usr/link.vms
+**vmess鏈接: link_path:/usr/link.vms
 acme證書: cert_path:/root/cert**
 
 **相關指令
-xy_command: **
+xy_command:**
 ```
 xray run -c /usr/local/etc/xray/*.json
 systemctl start xray.service
