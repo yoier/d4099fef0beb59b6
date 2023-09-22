@@ -66,8 +66,20 @@ acme證書: cert_path:/root/cert
 **相關指令**
 
 **xy_command:**
+
+啓動
 ```
 xray run -c /usr/local/etc/xray/*.json
+```
+自啓動
+```
 systemctl start xray.service
+```
+重啓
+```
+systemctl restart xray.service
+```
+運行狀態
+```
 systemctl status xray.service
 ```
