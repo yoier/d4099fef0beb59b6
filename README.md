@@ -16,7 +16,12 @@
 Cloudflare Global API Key
     
 Coloudfare注冊郵箱
-    
+
+
+**安裝curl**
+```
+apt install curl
+```
 
 **下載並使用**
 ```
