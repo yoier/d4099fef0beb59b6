@@ -1,5 +1,5 @@
 # d4099fef0beb59b6
-**證書申請脚本來自[@FranzKafkaYu](https://github.com/FranzKafkaYu/x-ui/blob/main/x-ui.sh)**
+**證書申請脚本來自[@FranzKafkaYu](https://github.com/FranzKafkaYu/x-ui/blob/main/x-ui.sh)，安裝脚本來自[@XTLS](https://github.com/XTLS/Xray-install)**
 
 **僅在Ubuntu上運行xray_script**
 
