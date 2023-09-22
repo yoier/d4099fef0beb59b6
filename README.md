@@ -30,7 +30,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/sc
 
 **下載**
 ```
-curl -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
+curl -X GET -H 'Cache-Control: no-cache' -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
 ```
 
 **執行**
