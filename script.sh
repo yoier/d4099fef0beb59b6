@@ -96,7 +96,12 @@ ssl_cert_issue_by_cloudflare() {
     fi
 }
 main() {
-    echo && read -p "0.exit;1.get_cf_crt;2.install_xy_root" num
+    echo && read -p "
+    0.exit
+    1.get_cf_crt
+    2.install_xy_root
+    3.xy_filepth
+    " num
     case "${num}" in
     0)
         exit 0
@@ -106,6 +111,23 @@ main() {
         ;;
     2)
         bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+        ;;
+    3)
+        echo "installed: /etc/systemd/system/xray.service
+installed: /etc/systemd/system/xray@.service
+
+installed: /usr/local/bin/xray
+installed: /usr/local/etc/xray/*.json
+
+installed: /usr/local/share/xray/geoip.dat
+installed: /usr/local/share/xray/geosite.dat
+
+installed: /var/log/xray/access.log
+installed: /var/log/xray/error.log
+command: xray run -c /usr/local/etc/xray/*.json
+systemctl start xray.service
+systemctl status xray.service
+"
         ;;
     *)
         LOGE "err num"
