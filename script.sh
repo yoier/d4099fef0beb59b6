@@ -33,11 +33,144 @@ confirm() {
         return 1
     fi
 }
+get_ip() {
+    eth=`ifconfig | grep -Eo ".*: " | grep -Eo "\w*" | grep -v lo`
+    ip=`ifconfig $eth| grep -Eo "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -Eo "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"`
+    ethnum=`ifconfig | grep -Eo ".*: " | grep -Eo "\w*" | grep -v -c lo`
+    ethnum=$((ethnum))
+    echo $ip
+    echo $ethnum
+    echo -e "all_ipaddress:\n"$ip
+    use_ip=""
+    if [ $ethnum != 1 ];then
+            read -p "Input your vps_ip here:" use_ip
+    else
+            use_ip=$ip
+    fi
+}
+cof_json() {
+    get_ip
+    cf_ip=${use_ip}
+    cf_port=""
+    cf_name=""
+    cf_uuid=`xray uuid`
+    cf_don=${CF_Domain}
+    cf_cer_pth="$certPath/${CF_Domain}.cer"
+    cf_key_pth="$certPath/${CF_Domain}.key"
+    read -p "Set your xy_name:" cf_name
+    read -p "Input your xy_port:" cf_port
+    echo -e "This is ur cfg:
+    name:$cf_name
+    ip:$cf_ip
+    port:$cf_port
+    uuid:$cf_uuid
+    don:$cf_don
+    cer_pth:$cf_cer_pth
+    key_pth:$cf_key_pth
+    "
+    confirm "确认配置無誤[y/n]" "y"
+        if [ $? -eq 0 ]; then
+            echo "開始寫入config"
+        else
+            exit 0
+        fi
+    echo "{
+    \"log\": null,
+    \"routing\": {
+        \"domainStrategy\": \"AsIs\",
+        \"rules\": [
+            {
+                \"type\": \"field\",
+                \"ip\": [
+                    \"geoip:private\"
+                ],
+                \"outboundTag\": \"block\"
+            },
+            {
+                \"type\": \"field\",
+                \"protocol\": [
+                    \"bittorrent\"
+                ],
+                \"outboundTag\": \"block\"
+            }
+        ]
+    },
+    \"dns\": null,
+    \"inbounds\": [
+        {
+            \"listen\": \"$cf_ip\",
+            \"port\": $cf_port,
+            \"protocol\": \"vmess\",
+            \"settings\": {
+                \"clients\": [
+                    {
+                        \"id\": \"$cf_uuid\",
+                        \"alterId\": 0
+                    }
+                ],
+                \"disableInsecureEncryption\": false
+            },
+            \"streamSettings\": {
+                \"network\": \"tcp\",
+                \"security\": \"tls\",
+                \"tlsSettings\": {
+                    \"serverName\": \"$cf_don\",
+                    \"certificates\": [
+                        {
+                            \"certificateFile\": \"$cf_cer_pth\",
+                            \"keyFile\": \"$cf_key_pth\"
+                        }
+                    ]
+                },
+                \"tcpSettings\": {
+                    \"header\": {
+                        \"type\": \"none\"
+                    }
+                }
+            },
+            \"tag\": \"inbound-$cf_port\",
+            \"sniffing\": {
+                \"enabled\": true,
+                \"destOverride\": [
+                    \"http\",
+                    \"tls\"
+                ]
+            }
+        }
+    ],
+    \"outbounds\": [
+        {
+            \"protocol\": \"freedom\",
+            \"tag\": \"direct\"
+        },
+        {
+            \"protocol\": \"blackhole\",
+            \"tag\": \"block\"
+        }
+    ]
+}">/usr/local/etc/xray/config.json
+    base64_link=`echo -n "{
+  \"v\": \"2\",
+  \"ps\": \"$cf_name\",
+  \"add\": \"$cf_don\",
+  \"port\": $cf_port,
+  \"id\": \"$cf_uuid\",
+  \"aid\": 0,
+  \"net\": \"tcp\",
+  \"type\": \"none\",
+  \"host\": \"\",
+  \"path\": \"\",
+  \"tls\": \"tls\"
+}" | base64 |tr -d '\n'`
+    echo -e "vmess://$base64_link\n" > /usr/link.vms
+    echo -e "----------\nyour_link_pth:/usr/link.vms\n----------"
+    cat /usr/link.vms
+}
 install_acme() {
     cd ~
     LOGI "开始安装acme脚本..."
     apt update
-    apt install cron socat
+    apt install cron socat net-tools
     curl https://get.acme.sh | sh
     if [ $? -ne 0 ]; then
         LOGE "acme安装失败"
@@ -134,10 +267,14 @@ main() {
     1.get_cf_crt
     2.install_xy_root
     3.xy_filepth
+    4.install_all
+    5.stop_xy
+    6.restart_xy
+    7.start_xy
     " num
     case "${num}" in
     0)
-        exit 0
+        exit
         ;;
     1)
         ssl_cert_issue_by_cloudflare
@@ -146,22 +283,59 @@ main() {
         bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
         ;;
     3)
-        echo "installed: /etc/systemd/system/xray.service
+        echo "install_path
+installed: /etc/systemd/system/xray.service
 installed: /etc/systemd/system/xray@.service
-
 installed: /usr/local/bin/xray
 installed: /usr/local/etc/xray/*.json
-
 installed: /usr/local/share/xray/geoip.dat
 installed: /usr/local/share/xray/geosite.dat
-
 installed: /var/log/xray/access.log
 installed: /var/log/xray/error.log
-command: xray run -c /usr/local/etc/xray/*.json
+
+link_path:/usr/link.vms
+cert_path:/root/cert
+
+xy_command: 
+xray run -c /usr/local/etc/xray/*.json
 systemctl start xray.service
 systemctl status xray.service
 "
         ;;
+    4)
+        bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+        confirm "确认xray安裝成功,準備申請cloudfare證書[y/n]" "y"
+        if [ $? -eq 0 ]; then
+            echo "xray安裝成功，開始申請cloudfare證書"
+        else
+            exit
+        fi
+        ssl_cert_issue_by_cloudflare
+        confirm "确认證書安裝成功，準備配置cfg[y/n]" "y"
+        if [ $? -eq 0 ]; then
+            echo "證書申請成功，開始配置config"
+        else
+            exit
+        fi
+        cof_json
+        confirm "确认配置成功，準備重啓xy" "y"
+        if [ $? -eq 0 ]; then
+            echo "重啓xy"
+        else
+            exit
+        fi
+        systemctl restart xray.service
+        echo "xy restart"
+        ;;
+    5)
+        systemctl stop xray.service
+        echo "xy stop"
+    6)
+        systemctl restart xray.service
+        echo "xy restart"
+    7)
+        systemctl start xray.service
+        echo "xy start"
     *)
         LOGE "err num"
         ;;
