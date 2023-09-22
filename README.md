@@ -9,13 +9,13 @@
 
 使用條件: 
 
-    付費域名
+付費域名
     
-    由Cloudfare解析
+由Cloudfare解析
     
-    Cloudflare Global API Key
+Cloudflare Global API Key
     
-    Coloudfare注冊郵箱
+Coloudfare注冊郵箱
     
 
 **下載並使用**
