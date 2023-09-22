@@ -1,0 +1,75 @@
+{
+    "log": null,
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:private"
+                ],
+                "outboundTag": "block"
+            },
+            {
+                "type": "field",
+                "protocol": [
+                    "bittorrent"
+                ],
+                "outboundTag": "block"
+            }
+        ]
+    },
+    "dns": null,
+    "inbounds": [
+        {
+            "listen": "ip_add",
+            "port": your_port,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "set_id",
+                        "alterId": 0
+                    }
+                ],
+                "disableInsecureEncryption": false
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "tls",
+                "tlsSettings": {
+                    "serverName": "your_dom",
+                    "certificates": [
+                        {
+                            "certificateFile": "cer_pth",
+                            "keyFile": "key_pth"
+                        }
+                    ]
+                },
+                "tcpSettings": {
+                    "header": {
+                        "type": "none"
+                    }
+                }
+            },
+            "tag": "inbound-1",
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "tag": "block"
+        }
+    ]
+}
