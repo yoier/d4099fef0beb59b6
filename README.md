@@ -25,8 +25,8 @@ curl -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
 bash script.sh
 ```
 
-**相關目錄**
-install_path
+**相關目錄**\n
+install_path\n
 installed: /etc/systemd/system/xray.service
 installed: /etc/systemd/system/xray@.service
 installed: /usr/local/bin/xray
