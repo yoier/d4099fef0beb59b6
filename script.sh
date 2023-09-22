@@ -1,5 +1,38 @@
 #!/bin/bash
 #on ubuntu
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+plain='\033[0m'
+
+#Add some basic function here
+function LOGD() {
+    echo -e "${yellow}[DEG] $* ${plain}"
+}
+
+function LOGE() {
+    echo -e "${red}[ERR] $* ${plain}"
+}
+
+function LOGI() {
+    echo -e "${green}[INF] $* ${plain}"
+}
+[[ $EUID -ne 0 ]] && LOGE "错误:  必须使用root用户运行此脚本!\n" && exit 1
+confirm() {
+    if [[ $# > 1 ]]; then
+        echo && read -p "$1 [默认$2]: " temp
+        if [[ x"${temp}" == x"" ]]; then
+            temp=$2
+        fi
+    else
+        read -p "$1 [y/n]: " temp
+    fi
+    if [[ x"${temp}" == x"y" || x"${temp}" == x"Y" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
 install_acme() {
     cd ~
     LOGI "开始安装acme脚本..."
