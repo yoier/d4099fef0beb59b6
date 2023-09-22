@@ -1,4 +1,5 @@
 # d4099fef0beb59b6
+**證書申請脚本來自@FranzKafkaYu**
 **下載並使用**
 
 ```
@@ -12,4 +13,7 @@ curl -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
 ```
 
 **執行**
+
+```
 bash script.sh
+```
