@@ -330,12 +330,15 @@ systemctl status xray.service
     5)
         systemctl stop xray.service
         echo "xy stop"
+        ;;
     6)
         systemctl restart xray.service
         echo "xy restart"
+        ;;
     7)
         systemctl start xray.service
         echo "xy start"
+        ;;
     *)
         LOGE "err num"
         ;;
