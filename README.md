@@ -39,7 +39,7 @@ install_path
 
 installed: /etc/systemd/system/xray.service
 
-installed: /etc/systemd/system/xray@.service
+__installed: /etc/systemd/system/xray@.service__
 
 installed: /usr/local/bin/xray
 
