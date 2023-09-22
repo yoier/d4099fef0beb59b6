@@ -1,7 +1,7 @@
 # d4099fef0beb59b6
 **證書申請脚本來自[@FranzKafkaYu](https://github.com/FranzKafkaYu/x-ui/blob/main/x-ui.sh)**
 
-**僅在Ubuntu上運行**
+**僅在Ubuntu上運行xray_script**
 
 協議類型: vms+tcp+tls
 
