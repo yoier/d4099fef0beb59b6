@@ -265,12 +265,14 @@ main() {
     echo && read -p "
     0.exit
     1.get_cf_crt
-    2.install_xy_root
+    2.install&&upgrade_xy_use_root
     3.xy_filepth
     4.install_all
     5.stop_xy
     6.restart_xy
     7.start_xy
+    8.update_geop
+    9.remove_xy
     " num
     case "${num}" in
     0)
@@ -283,23 +285,24 @@ main() {
         bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
         ;;
     3)
-        echo "install_path
-installed: /etc/systemd/system/xray.service
-installed: /etc/systemd/system/xray@.service
-installed: /usr/local/bin/xray
-installed: /usr/local/etc/xray/*.json
-installed: /usr/local/share/xray/geoip.dat
-installed: /usr/local/share/xray/geosite.dat
-installed: /var/log/xray/access.log
-installed: /var/log/xray/error.log
-
-link_path:/usr/link.vms
-cert_path:/root/cert
-
-xy_command: 
-xray run -c /usr/local/etc/xray/*.json
-systemctl start xray.service
-systemctl status xray.service
+        echo "
+    install_path
+    installed: /etc/systemd/system/xray.service
+    installed: /etc/systemd/system/xray@.service
+    installed: /usr/local/bin/xray
+    installed: /usr/local/etc/xray/*.json
+    installed: /usr/local/share/xray/geoip.dat
+    installed: /usr/local/share/xray/geosite.dat
+    installed: /var/log/xray/access.log
+    installed: /var/log/xray/error.log
+    
+    link_path:/usr/link.vms
+    cert_path:/root/cert
+    
+    xy_command: 
+    xray run -c /usr/local/etc/xray/*.json
+    systemctl start xray.service
+    systemctl status xray.service
 "
         ;;
     4)
@@ -338,6 +341,29 @@ systemctl status xray.service
     7)
         systemctl start xray.service
         echo "xy start"
+        ;;
+    8)
+        bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install-geodata
+        echo "upgrade_geodat"
+        ;;
+    9)
+        echo && read -p "remaind cfg.json and log?
+        1.remaind
+        2.don't remaind
+        " num2
+        case "${num2}" in
+        1)
+            bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove
+            echo "only remove x_corn"
+            ;;
+        2)
+            bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
+            echo "remove all"
+            ;;
+        *)
+            echo "err num"
+            exit
+            ;;
         ;;
     *)
         LOGE "err num"
