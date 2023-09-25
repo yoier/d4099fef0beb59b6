@@ -55,7 +55,7 @@ cof_json() {
     cf_name=""
     cf_uuid=`xray uuid`
     cf_don=${CF_Domain}
-    cf_cer_pth="$certPath/${CF_Domain}.cer"
+    cf_cer_pth="$certPath/${CF_Domain}.crt"
     cf_key_pth="$certPath/${CF_Domain}.key"
     read -p "Set your xy_name:" cf_name
     read -p "Input your xy_port:" cf_port
@@ -236,9 +236,9 @@ ssl_cert_issue_by_cloudflare() {
         else
             LOGI "证书签发成功,安装中..."
         fi
-        ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} -d *.${CF_Domain} --ca-file /root/cert/ca.cer \
-            --cert-file /root/cert/${CF_Domain}.cer --key-file /root/cert/${CF_Domain}.key \
-            --fullchain-file /root/cert/fullchain.cer
+        ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} --ca-file /root/cert/ca.cer \
+            --cert-file /root/cert/server.crt --key-file /root/cert/${CF_Domain}.key \
+            --fullchain-file /root/cert/${CF_Domain}.crt
         if [ $? -ne 0 ]; then
             LOGE "证书安装失败,脚本退出"
             rm -rf ~/.acme.sh/${CF_Domain}
