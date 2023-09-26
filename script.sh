@@ -236,7 +236,7 @@ ssl_cert_issue_by_cloudflare() {
         else
             LOGI "证书签发成功,安装中..."
         fi
-        ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} --ca-file /root/cert/ca.cer \
+        ~/.acme.sh/acme.sh --installcert -d ${CF_Domain} --ca-file /root/cert/ca.crt \
             --cert-file /root/cert/server.crt --key-file /root/cert/${CF_Domain}.key \
             --fullchain-file /root/cert/${CF_Domain}.crt
         if [ $? -ne 0 ]; then
