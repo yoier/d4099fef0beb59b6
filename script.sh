@@ -228,7 +228,7 @@ ssl_cert_issue_by_cloudflare() {
         fi
         export CF_Key="${CF_GlobalKey}"
         export CF_Email=${CF_AccountEmail}
-        ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${CF_Domain} -d *.${CF_Domain} --log
+        ~/.acme.sh/acme.sh --issue --dns dns_cf -d ${CF_Domain} --log
         if [ $? -ne 0 ]; then
             LOGE "证书签发失败,脚本退出"
             rm -rf ~/.acme.sh/${CF_Domain}
