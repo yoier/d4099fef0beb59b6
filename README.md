@@ -83,3 +83,7 @@ systemctl restart xray.service
 ```
 systemctl status xray.service
 ```
+删除证书
+```
+~/.acme.sh/acme.sh --remove -d example.com
+```
