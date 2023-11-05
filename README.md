@@ -20,17 +20,18 @@ Coloudfare注冊郵箱
 
 **安裝curl**
 ```
-apt install curl
-```
-
-**下載並使用**
-```
-bash <(curl -Ls https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh)
+apt install git
 ```
 
 **下載**
 ```
-curl -X GET -H 'Cache-Control: no-cache' -O https://raw.githubusercontent.com/yoier/d4099fef0beb59b6/main/script.sh
+git clone https://user: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@ghproxy.com/https://github.com/yoier/d4099fef0beb59b6
+```
+
+**使用**
+```
+cd d4099fef0beb59b6
+bash script.sh
 ```
 
 **執行**
