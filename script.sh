@@ -322,6 +322,36 @@ all_txt() {
         text14="Apply certificate success"
         text15="Unknown number and Exit script"
         text16="Menu"
+        text17="******Instructions******"
+        text18="This scripts use Acme to apply certificate,you should known:"
+        text19="1.Cloudflare register e-mail"
+        text20="2.Cloudflare Global API Key"
+        text21="3.Domain names are resolved through the Cloudflare"
+        text22="4.Install path with: /root/cert"
+        text23="I have confirmed the above[y/n]"
+        text24="Unable to install acme,please check the error log"
+        text25="Please set domain name:"
+        text26="Verifying..."
+        text27="Verification failed,Duplicate domain name,Certificate status:"
+        text28="Verification passed..."
+        text29="Please set API Key:"
+        text30="Dependency installation completed"
+        text31="Please set your register e-mail:"
+        text32="Check information:"
+        text33="Revise CA to Lets'Encrypt fail,Script exit"
+        text34="Certificate issuance failed,Script exit"
+        text35="Certificate issuance success,installing..."
+        text36="Install dependencies and acme script..."
+        text37="Certificate install success,Turn on automatic updates..."
+        text38="Automatic update settings failed,Script exit"
+        text39="Certificate install success and Turn on automatic updates,information:"
+        text40="Check ip:"
+        text41="Set your ip:"
+        text42="Set node name:"
+        text43="Set node port:"
+        text44="Confirm configuration is correct[y/n]"
+        text45="Start writing..."
+
     else
         text0="\t0.退出\n\t1.安装并配置全部\n\t2.安装或更新Xray\n\t3.获取cloud证书\n\t4.相关安装文件路径\n\t5.停止Xray\n\t6.重启Xray\n\t7.启动Xray\n\t8.更新geop规则\n\t9.卸载Xray"
         text1="脚本已退出..."
@@ -409,6 +439,7 @@ menu() {
         nginx_config
         ufw allow 80
         ufw allow 443
+        ufw reload
         nginx -s reload
         systemctl restart xray.service
         LOGI $text7
