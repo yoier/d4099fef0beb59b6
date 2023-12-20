@@ -35,7 +35,7 @@ install_acme() {
     cd ~
     LOGI $text36
     apt update
-    apt install cron socat net-tools ufw
+    apt install cron socat net-tools ufw unzip diffutils
     LOGI $text30
     curl https://get.acme.sh | sh
     if [ $? -ne 0 ]; then
