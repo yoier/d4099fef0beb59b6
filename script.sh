@@ -303,13 +303,40 @@ server {
 }
 EOF
 }
+auto_update_config() {
+cat >/usr/juje.sh<<EOF
+diff $cf_cer_pth $cf_cer_pth.bak
+if [ \$? -eq 0 ]; then
+echo "do not update."
+exit 0
+else
+cp $cf_cer_pth $cf_cer_pth.bak
+bash -c "\$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root|grep "No new version"
+if [ \$? -eq 0 ]; then
+systemctl restart xray.service
+echo "restart."
+exit 0
+else
+echo "update success!"
+echo "do not restart."
+fi
+fi
+EOF
+chmod 777 /usr/juje.sh
+cat >/usr/ctm.txt<<EOF
+0 5 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
+10 5 * * * /usr/juje.sh > /dev/null
+
+EOF
+crontab -u root /usr/ctm.txt
+}
 all_txt() {
     if [ $1 -eq 1 ]; then
         text0="\t0.exit\n\t1.install_all\n\t2.install&&upgrade_xary_use_root\n\t3.get_cf_crt\n\t4.xray_filepth\n\t5.stop_xray\n\t6.restart_xary\n\t7.start_xary\n\t8.update_geop\n\t9.remove_xary"
         text1="Exit script..."
         text2="Apply for a certificate"
         text3="Install or Upgrade_xray"
-        text4="xray install_path\n\tinstalled: /etc/systemd/system/xray.service\n\tinstalled: /etc/systemd/system/xray@.service\n\tinstalled: /usr/local/bin/xray\n\tinstalled: /usr/local/etc/xray/*.json\n\tinstalled: /usr/local/share/xray/geoip.dat\n\tinstalled: /usr/local/share/xray/geosite.dat\n\tinstalled: /var/log/xray/access.log\n\tinstalled: /var/log/xray/error.log\nlink and cert files\n\tlink_path:/usr/link.vls\n\tcert_path:/root/cert\nsome_command: \n\txray run -c /usr/local/etc/xray/*.json\n\tsystemctl start xray.service\n\tsystemctl status xray.service\n\tnginx -s reload"
+        text4="xray install_path\n\tinstalled: /etc/systemd/system/xray.service\n\tinstalled: /etc/systemd/system/xray@.service\n\tinstalled: /usr/local/bin/xray\n\tinstalled: /usr/local/etc/xray/*.json\n\tinstalled: /usr/local/share/xray/geoip.dat\n\tinstalled: /usr/local/share/xray/geosite.dat\n\tinstalled: /var/log/xray/access.log\n\tinstalled: /var/log/xray/error.log\nlink and cert files\n\tlink_path:/usr/link.vls\n\tcert_path:/root/cert\n\tupdatetmp:/usr/ctm.txt\n\tupdatejuje:/usr/juje.sh\nsome_command: \n\txray run -c /usr/local/etc/xray/*.json\n\tsystemctl start xray.service\n\tsystemctl status xray.service\n\tnginx -s reload"
         text5="Success(y) or failure(n)[y/n]"
         text6="Xray install success"
         text7="Restart xray"
@@ -357,7 +384,7 @@ all_txt() {
         text1="脚本已退出..."
         text2="申请证书"
         text3="安装或更新Xray"
-        text4="Xray安装路径\n\tinstalled: /etc/systemd/system/xray.service\n\tinstalled: /etc/systemd/system/xray@.service\n\tinstalled: /usr/local/bin/xray\n\tinstalled: /usr/local/etc/xray/*.json\n\tinstalled: /usr/local/share/xray/geoip.dat\n\tinstalled: /usr/local/share/xray/geosite.dat\n\tinstalled: /var/log/xray/access.log\n\tinstalled: /var/log/xray/error.log\n链接及证书路径\n\tlink_path:/usr/link.vls\n\tcert_path:/root/cert\n相关命令: \n\txray run -c /usr/local/etc/xray/*.json\n\tsystemctl start xray.service\n\tsystemctl status xray.service\n\tnginx -s reload"
+        text4="Xray安装路径\n\tinstalled: /etc/systemd/system/xray.service\n\tinstalled: /etc/systemd/system/xray@.service\n\tinstalled: /usr/local/bin/xray\n\tinstalled: /usr/local/etc/xray/*.json\n\tinstalled: /usr/local/share/xray/geoip.dat\n\tinstalled: /usr/local/share/xray/geosite.dat\n\tinstalled: /var/log/xray/access.log\n\tinstalled: /var/log/xray/error.log\n链接及证书路径\n\tlink_path:/usr/link.vls\n\tcert_path:/root/cert\n\tupdatetmp:/usr/ctm.txt\n\tupdatejuje:/usr/juje.sh\n相关命令: \n\txray run -c /usr/local/etc/xray/*.json\n\tsystemctl start xray.service\n\tsystemctl status xray.service\n\tnginx -s reload"
         text5="成功(y) 还是 失败(n)[y/n]"
         text6="Xray安装成功"
         text7="重启Xray"
@@ -437,6 +464,8 @@ menu() {
         xray_config
         #nginx..
         nginx_config
+	auto_update_config
+	ufw enable
         ufw allow 80
         ufw allow 443
         ufw reload
