@@ -113,6 +113,7 @@ ssl_cert_issue_by_cloudflare() {
             rm -rf ~/.acme.sh/${CF_Domain}
             exit 1
         else
+	    cp $cf_cer_pth $cf_cer_pth.bak
             LOGI $text37
         fi
         ~/.acme.sh/acme.sh --upgrade --auto-upgrade
