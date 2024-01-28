@@ -83,6 +83,8 @@ ssl_cert_issue_by_cloudflare() {
         LOGD $text31
         read CF_AccountEmail
         LOGD $text32
+	cf_cer_pth="$certPath/${CF_Domain}.crt"
+        cf_key_pth="$certPath/${CF_Domain}.key"
         LOGI "\t$CF_Domain\n\t$CF_GlobalKey\n\t$CF_AccountEmail"
         confirm "$text44" "y"
         if [ $? -eq 0 ]; then
@@ -154,8 +156,6 @@ xray_config() {
     cf_name=""
     cf_uuid=`xray uuid`
     cf_don=${CF_Domain}
-    cf_cer_pth="$certPath/${CF_Domain}.crt"
-    cf_key_pth="$certPath/${CF_Domain}.key"
     LOGD $text42
     read cf_name
     LOGD $text43
