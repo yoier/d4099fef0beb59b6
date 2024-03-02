@@ -326,8 +326,8 @@ fi
 EOF
 chmod 777 /usr/juje.sh
 cat >/usr/ctm.txt<<EOF
-0 5 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
-10 5 * * * /usr/juje.sh > /dev/null
+0 4 * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" > /dev/null
+10 4 * * * /usr/juje.sh > /dev/null
 
 EOF
 crontab -u root /usr/ctm.txt
