@@ -309,6 +309,7 @@ cat >/usr/juje.sh<<EOF
 diff $cf_cer_pth $cf_cer_pth.bak
 if [ \$? -eq 0 ]; then
 echo "do not update."
+bash -c "\$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 exit 0
 else
 cp $cf_cer_pth $cf_cer_pth.bak
