@@ -468,8 +468,8 @@ menu() {
         nginx_config
 	auto_update_config
 	ufw enable
-        ufw allow 80
-        ufw allow 443
+        ufw allow 80/tcp
+        ufw allow 443/tcp
         ufw reload
         nginx -s reload
         systemctl restart xray.service
