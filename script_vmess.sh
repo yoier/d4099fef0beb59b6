@@ -211,7 +211,7 @@ xray_config() {
                 "network": "tcp",
                 "security": "tls",
                 "tlsSettings": {
-                    "serverName": "$cf_don"
+                    "serverName": "$cf_don",
                     "certificates": [
                         {
                             "certificateFile": "$cf_cer_pth",
