@@ -172,7 +172,7 @@ xray_config() {
         fi
     cat >/usr/local/etc/xray/config.json<<EOF
 {
-    "log": none,
+    "log": null,
     "inbounds": [
         {
             "listen": "$cf_ip",
@@ -188,11 +188,13 @@ xray_config() {
                 "decryption": "none",
                 "fallbacks": [
                     {
-                        "dest": 8087
+                        "dest": 8087,
+                        "xver": 1
                     },
                     {
                         "alpn":"h2",
-                        "dest": 8088
+                        "dest": 8088,
+                        "xver": 1
                     }
                 ]
             },
@@ -250,14 +252,14 @@ nginx_config() {
         else
             exit 0
         fi
-    cat >/etc/nginx/sites-available/default<<EOF
+    cat >/etc/nginx/nginx.conf<<EOF
 worker_processes auto;
 worker_cpu_affinity auto;
 worker_rlimit_nofile 65535;
 
-error_log logs/error.log warn;
+error_log /dev/null;
 
-pid logs/nginx.pid;
+pid /var/run/nginx.pid;
 
 events {
     worker_connections 1024;
@@ -297,7 +299,7 @@ http {
 
         charset utf-8;
 
-        access_log logs/${cf_don}.access.log proxy;
+        access_log off;
 
         location / {
             root /var/www/html;
