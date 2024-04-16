@@ -1,0 +1,32 @@
+{
+    "tcpSettings": {
+        "header": {
+            "type": "http",
+            "request": {
+                "version": "1.1",
+                "method": "GET",
+                "path": ["/"],
+                "headers": {
+                    "Host": ["www.baidu.com", "www.bing.com"],
+                    "User-Agent": [
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+                    ],
+                    "Accept-Encoding": ["gzip, deflate"],
+                    "Connection": ["keep-alive"],
+                    "Pragma": "no-cache"
+                }
+            },
+            "response": {
+                "version": "1.1",
+                "status": "200",
+                "reason": "OK",
+                "headers": {
+                    "Content-Type": ["application/octet-stream", "video/mpeg"],
+                    "Transfer-Encoding": ["chunked"],
+                    "Connection": ["keep-alive"],
+                    "Pragma": "no-cache"
+                }
+            }
+        }
+    }
+}
