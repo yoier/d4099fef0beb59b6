@@ -152,17 +152,21 @@ get_ip() {
 xray_config() {
     get_ip
     cf_ip=${use_ip}
-    cf_port=""
+    cf_port="443"
     cf_name=""
+    ws_pt=""
     cf_uuid=`xray uuid`
+    cf_uuid2=`xray uuid`
     cf_don=${CF_Domain}
     LOGD $text42
     read cf_name
-    LOGD $text43
-    read cf_port
+    #LOGD $text43
+    #read cf_port
+    LOGD "WS_PATH"
+    read ws_pt
     #443 port only
     LOGD "------------"
-    LOGD "\tname:$cf_name\n\tip:$cf_ip\n\tport:$cf_port\n\tuuid:$cf_uuid\n\tdon:$cf_don\n\tcer_pth:$cf_cer_pth\n\tkey_pth:$cf_key_pth"
+    LOGD "\tname:$cf_name\n\tip:$cf_ip\n\tport:$cf_port\n\tuuid:$cf_uuid\n\tdon:$cf_don\n\tcer_pth:$cf_cer_pth\n\tkey_pth:$cf_key_pth\n\twsuuid:$cf_uuid2\n\twspth:$ws_pt"
     LOGD "------------"
     confirm "$text44" "y"
         if [ $? -eq 0 ]; then
@@ -176,7 +180,7 @@ xray_config() {
     "inbounds": [
         {
             "listen": "$cf_ip",
-            "port": $cf_port,
+            "port": 443,
             "protocol": "vless",
             "settings": {
                 "clients": [
@@ -191,8 +195,9 @@ xray_config() {
                         "dest": 8087
                     },
                     {
-                        "alpn":"h2",
-                        "dest": 8088
+                        "path": "$ws_pt",
+                        "dest": 1288,
+                        "xver": 1
                     }
                 ]
             },
@@ -200,29 +205,38 @@ xray_config() {
                 "network": "tcp",
                 "security": "tls",
                 "tlsSettings": {
-		    "alpn": ["h2","http/1.1"],
-		    "minVersion": "1.2",
-		    "maxVersion": "1.3",
+                    "alpn": [
+                        "http/1.1"
+                    ],
                     "certificates": [
                         {
                             "certificateFile": "$cf_cer_pth",
                             "keyFile": "$cf_key_pth"
                         }
                     ]
-                },
-                "tcpSettings": {
-                    "header": {
-                        "type": "none"
-                    }
                 }
+            }
+        },
+        {
+            "port": 1288,
+            "listen": "127.0.0.1",
+            "protocol": "vless",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "$cf_uuid2",
+                        "level": 0
+                    }
+                ],
+                "decryption": "none"
             },
-            "tag": "inbound-$cf_port",
-            "sniffing": {
-                "enabled": true,
-                "destOverride": [
-                    "http",
-                    "tls"
-                ]
+            "streamSettings": {
+                "network": "ws",
+                "security": "none",
+                "wsSettings": {
+                    "acceptProxyProtocol": true,
+                    "path": "$ws_pt"
+                }
             }
         }
     ],
@@ -234,7 +248,8 @@ xray_config() {
 }
 EOF
     echo -e "-----------------------------------------------"
-    echo -e "vless://$cf_uuid@$cf_don:$cf_port?headerType=none&type=tcp&encryption=none&fp=360&security=tls&sni=$cf_don&allowInsecure#$cf_name\n" > /usr/link.vls
+    echo -e "vless://$cf_uuid@$cf_don:$cf_port?type=tcp&encryption=none&security=tls&sni=$cf_don&allowInsecure#$cf_name\n" > /usr/link.vls
+    echo -e "vless://$cf_uuid2@$cf_don:$cf_port?type=ws&encryption=none&security=tls&sni=$cf_don&allowInsecure&path=%2F$ws_pt#$cf_name\n" > /usr/link.vls
     echo -e "----------your_link_pth:/usr/link.vls----------"
     cat /usr/link.vls
 }
@@ -270,7 +285,6 @@ server {
 
 server {
     listen 127.0.0.1:8087;
-    listen 127.0.0.1:8088 http2;
     server_name $cf_don;
     location / {
            root /var/www/html;
@@ -288,6 +302,7 @@ bash -c "\$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-releas
 exit 0
 else
 cp $cf_cer_pth $cf_cer_pth.bak
+nginx -s reload
 bash -c "\$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root|grep "No new version"
 if [ \$? -eq 0 ]; then
 systemctl restart xray.service
