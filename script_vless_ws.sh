@@ -166,7 +166,7 @@ xray_config() {
     read ws_pt
     #443 port only
     LOGD "------------"
-    LOGD "\tname:$cf_name\n\tip:$cf_ip\n\tport:$cf_port\n\tuuid:$cf_uuid\n\tdon:$cf_don\n\tcer_pth:$cf_cer_pth\n\tkey_pth:$cf_key_pth\n\twsuuid:$cf_uuid2\n\twspth:$ws_pt"
+    LOGD "\tname:$cf_name\n\tip:$cf_ip\n\tport:$cf_port\n\tuuid:$cf_uuid\n\tdon:$cf_don\n\tcer_pth:$cf_cer_pth\n\tkey_pth:$cf_key_pth\n\twsuuid:$cf_uuid2\n\twspth:/$ws_pt"
     LOGD "------------"
     confirm "$text44" "y"
         if [ $? -eq 0 ]; then
@@ -195,7 +195,7 @@ xray_config() {
                         "dest": 8087
                     },
                     {
-                        "path": "$ws_pt",
+                        "path": "/$ws_pt",
                         "dest": 1288,
                         "xver": 1
                     }
@@ -235,7 +235,7 @@ xray_config() {
                 "security": "none",
                 "wsSettings": {
                     "acceptProxyProtocol": true,
-                    "path": "$ws_pt"
+                    "path": "/$ws_pt"
                 }
             }
         }
