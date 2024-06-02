@@ -240,7 +240,7 @@ nginx_config() {
     curl -JLo html.zip https://github.com/yoier/d4099fef0beb59b6/archive/refs/tags/rls.zip
     unzip html.zip
     cd d4099fef0beb59b6*
-    mv -f /var/www/html/* /root/site_tp
+    mv -f /var/www/html/* /root/site_back
     mv -f html/* /var/www/html
     cd /root
     rm -rf mv_tmp
