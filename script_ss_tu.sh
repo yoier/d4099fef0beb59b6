@@ -52,7 +52,7 @@ else
     echo "config..."
     cat >/usr/local/share/upgd.sh<<EOF
 #!/bin/bash
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+bash -c "\$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 EOF
 chmod +x /usr/local/share/upgd.sh
 (crontab -l; echo "0 5 * * 2 /usr/local/share/upgd.sh") | crontab -
