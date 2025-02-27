@@ -1,6 +1,11 @@
 #!/bin/bash
 apt update
-apt install cron ufw
+echo "install ufw?(n(default)/y)"
+read uw
+if [[ uw == "y" ]];then
+apt install ufw
+fi
+apt install cron
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 echo "continue?(y(default)/n)"
 read ctu
@@ -32,15 +37,27 @@ cat >/usr/local/etc/xray/config.json<<EOF
     ]
 }
 EOF
+if [[ uw == "y" ]];then
 ufw enable
 ufw allow $port
 ufw reload
+fi
 systemctl restart xray.service
 echo "auto update?[y/n]"
 read x1
 if [[ $x1 == "y" ]];then
-(crontab -l; echo '0 6 * * 1 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root) | crontab -
+if [ -e "/usr/local/share/upgd.sh" ]; then
+    echo "has cof"
+else
+    echo "config..."
+    cat >/usr/local/share/upgd.sh<<EOF
+#!/bin/bash
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
+EOF
+chmod +x /usr/local/share/upgd.sh
+(crontab -l; echo "0 5 * * 2 /usr/local/share/upgd.sh") | crontab -
 crontab -l
+fi
 fi
 cat /usr/local/etc/xray/config.json
 exit 0
