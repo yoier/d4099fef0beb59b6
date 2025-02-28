@@ -2,14 +2,14 @@
 apt update
 echo "install ufw?(n(default)/y)"
 read uw
-if [[ uw == "y" ]];then
+if [[ $uw == "y" ]];then
 apt install ufw
 fi
 apt install cron
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root
 echo "continue?(y(default)/n)"
 read ctu
-if [[ ctu == "n" ]];then
+if [[ $ctu == "n" ]];then
 exit 0
 fi
 echo "input ip"
@@ -37,7 +37,7 @@ cat >/usr/local/etc/xray/config.json<<EOF
     ]
 }
 EOF
-if [[ uw == "y" ]];then
+if [[ $uw == "y" ]];then
 ufw enable
 ufw allow $port
 ufw reload
