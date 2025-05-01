@@ -42,6 +42,20 @@ ufw enable
 ufw allow $port
 ufw reload
 fi
+
+echo "Set priority?[y/n]"
+read x2
+if [[ $x2 == "y" ]];then
+mkdir -p /etc/systemd/system/xray.service.d
+cat << EOF > /etc/systemd/system/xray.service.d/priority.conf
+[Service]
+CPUSchedulingPolicy=rr
+CPUSchedulingPriority=99
+EOF
+systemctl daemon-reload
+systemctl restart xray
+fi
+
 systemctl restart xray.service
 echo "auto update?[y/n]"
 read x1
